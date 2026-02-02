@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Editor Portfolio - ชื่อของคุณ</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Archivo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-bg-dark: #0a0a0a;
+            --color-bg-medium: #1a1a1a;
+            --color-accent: #ff3366;
+            --color-accent-secondary: #6366f1;
+            --color-text: #ffffff;
+            --color-text-muted: #808080;
+            --font-display: 'Bebas Neue', sans-serif;
+            --font-body: 'Archivo', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            color: var(--color-text);
+            background-color: var(--color-bg-dark);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Grain Texture Overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.4;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1.5rem 4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: linear-gradient(to bottom, rgba(10,10,10,0.95), transparent);
+            backdrop-filter: blur(10px);
+            animation: slideDown 0.8s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .logo {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            letter-spacing: 2px;
+            color: var(--color-text);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo::before {
+            content: '▶';
+            color: var(--color-accent);
+            font-size: 1.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 3rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--color-text);
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--color-accent), var(--color-accent-secondary));
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--color-accent);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            background: radial-gradient(ellipse at center, rgba(255,51,102,0.1) 0%, transparent 70%);
+        }
+
+        .hero-content {
+            text-align: center;
+            z-index: 2;
+            max-width: 1200px;
+            padding: 0 2rem;
+        }
+
+        .hero-tag {
+            font-size: 0.9rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--color-accent);
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out 0.2s forwards;
+        }
+
+        .hero-title {
+            font-family: var(--font-display);
+            font-size: 10rem;
+            font-weight: 400;
+            line-height: 0.9;
+            margin-bottom: 1.5rem;
+            color: var(--color-text);
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out 0.4s forwards;
+            letter-spacing: 5px;
+        }
+
+        .hero-subtitle {
+            font-size: 1.8rem;
+            color: var(--color-text-muted);
+            margin-bottom: 3rem;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out 0.6s forwards;
+            font-weight: 300;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .hero-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.5rem 3.5rem;
+            background: linear-gradient(135deg, var(--color-accent), var(--color-accent-secondary));
+            color: var(--color-text);
+            text-decoration: none;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out 0.8s forwards;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .hero-cta::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .hero-cta:hover::before {
+            left: 100%;
+        }
+
+        .hero-cta:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 40px rgba(255,51,102,0.4);
+        }
+
+        .hero-cta::after {
+            content: '→';
+            font-size: 1.2rem;
+        }
+
+        /* Floating Elements */
+        .floating-element {
+            position: absolute;
+            border: 1px solid rgba(255,51,102,0.2);
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .float-1 {
+            width: 400px;
+            height: 400px;
+            top: 10%;
+            left: 5%;
+            border-radius: 50%;
+            animation-delay: 0s;
+        }
+
+        .float-2 {
+            width: 200px;
+            height: 200px;
+            bottom: 15%;
+            right: 10%;
+            animation-delay: -5s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(20px, -20px) rotate(5deg); }
+            50% { transform: translate(-15px, 15px) rotate(-5deg); }
+            75% { transform: translate(10px, 10px) rotate(3deg); }
+        }
+
+        /* Section Styles */
+        section {
+            padding: 8rem 4rem;
+            position: relative;
+        }
+
+        .section-header {
+            max-width: 1400px;
+            margin: 0 auto 5rem;
+        }
+
+        .section-tag {
+            font-size: 0.85rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--color-accent);
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            font-family: var(--font-display);
+            font-size: 5rem;
+            font-weight: 400;
+            line-height: 1;
+            letter-spacing: 3px;
+            background: linear-gradient(135deg, var(--color-text), var(--color-text-muted));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Showreel Section */
+        #showreel {
+            background: var(--color-bg-medium);
+            padding: 10rem 4rem;
+        }
+
+        .showreel-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .video-player {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+            border: 2px solid rgba(255,51,102,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .video-player:hover {
+            transform: scale(1.01);
+            border-color: var(--color-accent);
+            box-shadow: 0 0 60px rgba(255,51,102,0.3);
+        }
+
+        .play-button {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--color-accent), var(--color-accent-secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+
+        .video-player:hover .play-button {
+            transform: scale(1.1);
+        }
+
+        .play-button::after {
+            content: '▶';
+            font-size: 3rem;
+            color: white;
+            margin-left: 8px;
+        }
+
+        /* Services Section */
+        .services-grid {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .service-card {
+            background: var(--color-bg-medium);
+            padding: 3rem;
+            border-left: 3px solid var(--color-accent);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255,51,102,0.05), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .service-card:hover::before {
+            opacity: 1;
+        }
+
+        .service-card:hover {
+            transform: translateX(10px);
+        }
+
+        .service-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .service-card h3 {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            letter-spacing: 2px;
+        }
+
+        .service-card p {
+            color: var(--color-text-muted);
+            line-height: 1.8;
+        }
+
+        /* Portfolio Section */
+        #portfolio {
+            background: var(--color-bg-dark);
+        }
+
+        .portfolio-grid {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 3rem;
+        }
+
+        .portfolio-item {
+            position: relative;
+            aspect-ratio: 16/9;
+            background: var(--color-bg-medium);
+            overflow: hidden;
+            cursor: pointer;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .portfolio-thumbnail {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
+            transition: transform 0.5s ease;
+        }
+
+        .portfolio-item:hover .portfolio-thumbnail {
+            transform: scale(1.05);
+        }
+
+        .portfolio-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, rgba(0,0,0,0.95), transparent 50%);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 2.5rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .portfolio-item:hover .portfolio-overlay {
+            opacity: 1;
+        }
+
+        .portfolio-category {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--color-accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .portfolio-title {
+            font-family: var(--font-display);
+            font-size: 2.5rem;
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+        }
+
+        .portfolio-description {
+            color: var(--color-text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* Stats Section */
+        .stats-section {
+            max-width: 1400px;
+            margin: 5rem auto 0;
+            padding: 4rem;
+            background: var(--color-bg-medium);
+            border-top: 2px solid var(--color-accent);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 3rem;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-family: var(--font-display);
+            font-size: 4rem;
+            color: var(--color-accent);
+            letter-spacing: 2px;
+        }
+
+        .stat-label {
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.9rem;
+            color: var(--color-text-muted);
+        }
+
+        /* Contact Section */
+        #contact {
+            background: var(--color-bg-medium);
+        }
+
+        .contact-container {
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .contact-text {
+            font-size: 1.8rem;
+            color: var(--color-text-muted);
+            margin-bottom: 4rem;
+            line-height: 1.6;
+        }
+
+        .contact-methods {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 4rem;
+        }
+
+        .contact-method {
+            padding: 1.5rem 3rem;
+            background: var(--color-bg-dark);
+            border: 2px solid rgba(255,51,102,0.3);
+            text-decoration: none;
+            color: var(--color-text);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .contact-method:hover {
+            background: linear-gradient(135deg, var(--color-accent), var(--color-accent-secondary));
+            border-color: transparent;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255,51,102,0.3);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+        }
+
+        .social-link {
+            width: 60px;
+            height: 60px;
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-text);
+            text-decoration: none;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            border-color: var(--color-accent);
+            background: var(--color-accent);
+            transform: translateY(-5px) rotate(360deg);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--color-bg-dark);
+            padding: 3rem;
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        footer p {
+            color: var(--color-text-muted);
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero-title {
+                font-size: 7rem;
+            }
+
+            .section-title {
+                font-size: 4rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                padding: 1.5rem 2rem;
+            }
+
+            .nav-links {
+                gap: 1.5rem;
+            }
+
+            .nav-links a {
+                font-size: 0.8rem;
+            }
+
+            .hero-title {
+                font-size: 4rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+
+            section {
+                padding: 4rem 2rem;
+            }
+
+            .section-title {
+                font-size: 3rem;
+            }
+
+            .portfolio-grid,
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-section {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Smooth Scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--color-bg-dark);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(to bottom, var(--color-accent), var(--color-accent-secondary));
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--color-accent);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">YOUR NAME</div>
+        <ul class="nav-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#showreel">Showreel</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#portfolio">Portfolio</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="floating-element float-1"></div>
+        <div class="floating-element float-2"></div>
+        <div class="hero-content">
+            <div class="hero-tag">Video Editor & Motion Designer</div>
+            <h1 class="hero-title">CRAFT<br>STORIES</h1>
+            <p class="hero-subtitle">สร้างสรรค์วิดีโอที่เล่าเรื่องราวและสร้างอารมณ์ให้กับผู้ชม</p>
+            <a href="#showreel" class="hero-cta">Watch Showreel</a>
+        </div>
+    </section>
+
+    <!-- Showreel Section -->
+    <section id="showreel">
+        <div class="section-header">
+            <div class="section-tag">Featured Work</div>
+            <h2 class="section-title">SHOWREEL 2024</h2>
+        </div>
+        <div class="showreel-container">
+            <div class="video-player">
+                <div class="play-button"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services">
+        <div class="section-header">
+            <div class="section-tag">What I Do</div>
+            <h2 class="section-title">SERVICES</h2>
+        </div>
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-icon">🎬</div>
+                <h3>VIDEO EDITING</h3>
+                <p>
+                    ตัดต่อวิดีโอด้วยความประณีต เน้นจังหวะและความต่อเนื่องของเรื่องราว
+                    ใช้เทคนิคการตัดต่อที่ทันสมัยเพื่อสร้างผลงานที่น่าจดจำ
+                </p>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">🎨</div>
+                <h3>COLOR GRADING</h3>
+                <p>
+                    ปรับแต่งสีและโทนของภาพให้สอดคล้องกับ mood และอารมณ์ของเนื้อหา
+                    สร้าง cinematic look ที่โดดเด่นและมีเอกลักษณ์
+                </p>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">✨</div>
+                <h3>MOTION GRAPHICS</h3>
+                <p>
+                    ออกแบบและสร้างกราฟิกเคลื่อนไหว title animation และ visual effects
+                    เพิ่มมิติและความน่าสนใจให้กับผลงาน
+                </p>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">🎵</div>
+                <h3>SOUND DESIGN</h3>
+                <p>
+                    ผสานเสียงประกอบ เพลง และ sound effects ให้เข้ากับภาพได้อย่างลงตัว
+                    สร้างประสบการณ์การรับชมที่ครบครัน
+                </p>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">📺</div>
+                <h3>COMMERCIAL & ADS</h3>
+                <p>
+                    สร้างวิดีโอโฆษณาและคอนเทนต์การตลาดที่สร้างผลลัพธ์
+                    เน้นการสื่อสารแบรนด์และกระตุ้นให้เกิด engagement
+                </p>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">🎥</div>
+                <h3>MUSIC VIDEOS</h3>
+                <p>
+                    ตัดต่อ music video ที่สร้างสรรค์และเข้ากับจังหวะเพลงอย่างลงตัว
+                    นำเสนอภาพที่สวยงามและแปลกใหม่
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Portfolio Section -->
+    <section id="portfolio">
+        <div class="section-header">
+            <div class="section-tag">Recent Projects</div>
+            <h2 class="section-title">PORTFOLIO</h2>
+        </div>
+        <div class="portfolio-grid">
+            <div class="portfolio-item">
+                <div class="portfolio-thumbnail"></div>
+                <div class="portfolio-overlay">
+                    <div class="portfolio-category">Commercial</div>
+                    <h3 class="portfolio-title">Brand Campaign 2024</h3>
+                    <p class="portfolio-description">30-second commercial for luxury fashion brand</p>
+                </div>
+            </div>
+
+            <div class="portfolio-item">
+                <div class="portfolio-thumbnail"></div>
+                <div class="portfolio-overlay">
+                    <div class="portfolio-category">Music Video</div>
+                    <h3 class="portfolio-title">Artist Name - Song Title</h3>
+                    <p class="portfolio-description">Cinematic music video with dynamic editing</p>
+                </div>
+            </div>
+
+            <div class="portfolio-item">
+                <div class="portfolio-thumbnail"></div>
+                <div class="portfolio-overlay">
+                    <div class="portfolio-category">Documentary</div>
+                    <h3 class="portfolio-title">Behind The Scenes</h3>
+                    <p class="portfolio-description">Documentary-style brand storytelling</p>
+                </div>
+            </div>
+
+            <div class="portfolio-item">
+                <div class="portfolio-thumbnail"></div>
+                <div class="portfolio-overlay">
+                    <div class="portfolio-category">Social Media</div>
+                    <h3 class="portfolio-title">Digital Campaign</h3>
+                    <p class="portfolio-description">Series of short-form content for Instagram & TikTok</p>
+                </div>
+            </div>
+
+            <div class="portfolio-item">
+                <div class="portfolio-thumbnail"></div>
+                <div class="portfolio-overlay">
+                    <div class="portfolio-category">Corporate</div>
+                    <h3 class="portfolio-title">Company Profile</h3>
+                    <p class="portfolio-description">Professional corporate video production</p>
+                </div>
+            </div>
+
+            <div class="portfolio-item">
+                <div class="portfolio-thumbnail"></div>
+                <div class="portfolio-overlay">
+                    <div class="portfolio-category">Event</div>
+                    <h3 class="portfolio-title">Product Launch</h3>
+                    <p class="portfolio-description">Event highlight reel with motion graphics</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-section">
+            <div class="stat-item">
+                <div class="stat-number">150+</div>
+                <div class="stat-label">Projects Completed</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">50+</div>
+                <div class="stat-label">Happy Clients</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">5+</div>
+                <div class="stat-label">Years Experience</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">10M+</div>
+                <div class="stat-label">Total Views</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact">
+        <div class="section-header">
+            <div class="section-tag">Get In Touch</div>
+            <h2 class="section-title">LET'S WORK TOGETHER</h2>
+        </div>
+        <div class="contact-container">
+            <p class="contact-text">
+                มีโปรเจกต์ที่น่าสนใจหรืออยากปรึกษาเกี่ยวกับงานวิดีโอ?<br>
+                ติดต่อมาได้เลย พร้อมช่วยให้คุณสร้างสรรค์ผลงานที่ยอดเยี่ยม
+            </p>
+            <div class="contact-methods">
+                <a href="mailto:your.email@example.com" class="contact-method">Email Me</a>
+                <a href="tel:+66123456789" class="contact-method">Call Me</a>
+                <a href="#" class="contact-method">Schedule A Call</a>
+            </div>
+            <div class="social-links">
+                <a href="https://youtube.com/@yourhandle" class="social-link" target="_blank" title="YouTube">▶</a>
+                <a href="https://instagram.com/yourhandle" class="social-link" target="_blank" title="Instagram">📷</a>
+                <a href="https://vimeo.com/yourhandle" class="social-link" target="_blank" title="Vimeo">V</a>
+                <a href="https://linkedin.com/in/yourprofile" class="social-link" target="_blank" title="LinkedIn">in</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Your Name - Video Editor & Motion Designer. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Portfolio hover effects
+        const portfolioItems = document.querySelectorAll('.portfolio-item');
+        portfolioItems.forEach(item => {
+            item.addEventListener('mouseenter', function() {
+                this.style.transform = 'scale(0.98)';
+                this.style.transition = 'transform 0.3s ease';
+            });
+            
+            item.addEventListener('mouseleave', function() {
+                this.style.transform = 'scale(1)';
+            });
+        });
+
+        // Intersection Observer for fade-in animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.service-card, .portfolio-item, .stat-item').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+
+        // Video player click effect
+        const videoPlayer = document.querySelector('.video-player');
+        if (videoPlayer) {
+            videoPlayer.addEventListener('click', function() {
+                alert('ใส่ลิงก์ YouTube หรือ Vimeo Showreel ของคุณที่นี่');
+                // window.open('YOUR_SHOWREEL_URL', '_blank');
+            });
+        }
+
+        // Animate numbers in stats
+        const animateValue = (element, start, end, duration) => {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                const value = Math.floor(progress * (end - start) + start);
+                element.textContent = value + (element.dataset.suffix || '');
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        };
+
+        const statsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const statNumber = entry.target.querySelector('.stat-number');
+                    const finalValue = parseInt(statNumber.textContent);
+                    const suffix = statNumber.textContent.replace(/[0-9]/g, '');
+                    statNumber.dataset.suffix = suffix;
+                    animateValue(statNumber, 0, finalValue, 2000);
+                    statsObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        document.querySelectorAll('.stat-item').forEach(stat => {
+            statsObserver.observe(stat);
+        });
+    </script>
+</body>
+</html>
